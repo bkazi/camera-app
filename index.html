@@ -47,7 +47,7 @@
         const devices = await navigator.mediaDevices.enumerateDevices();
         cameras = devices.filter(source => source.kind == 'videoinput');
         if (cameras.length > 1) {
-          changeCam.setAttribute('disabled', 'false');
+          changeCam.removeAttribute('disabled');
           changeCam.addEventListener('click', startStream);
         }
         startStream();
