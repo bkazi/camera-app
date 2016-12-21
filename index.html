@@ -1,12 +1,82 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Camera App</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Camera App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #display {
+        width: 100vw;
+      }
+
+      #switch {
+        position: absolute;
+        left: 16px;
+        top: 16px;
+      }
+
+      #switch[disabled=true] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <video id="display" autoplay></video>
+    <button id="switch" disabled=true>Switch</button>
+    <script>
+      const display = document.getElementById('display');
+      const changeCam = document.getElementById('switch');
+      let cameras = [];
+      let deviceIndex = 0;
+
+      window.onload = main;
+
+      async function main() {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        cameras = devices.filter(source => source.kind == 'videoinput');
+        if (cameras.length > 1) {
+          changeCam.setAttribute('disabled', 'false');
+          changeCam.addEventListener('click', startStream);
+        }
+        startStream();
+      }
+
+      async function startStream() {
+        const constraints = {
+          video : {
+            optional : [{sourceId : cameras[deviceIndex].deviceId}]
+          }
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        display.src = window.URL.createObjectURL(stream);
+      }
+
+      // navigator.mediaDevices.enumerateDevices()
+      //   .then(sources => {
+      //     cameras = sources.filter(source => source.kind == 'videoinput');
+      //   })
+      //   .then(() => {
+      //     navigator.mediaDevices.getUserMedia({video: { optional : [{sourceId: cameras[0].deviceId }]}})
+      //       .then(stream => {
+      //         display.src = window.URL.createObjectURL(stream);  
+      //       })
+      //       .catch(err => {
+      //         console.error('Failed to get media stream');
+      //       });
+      //   });
+      
+    </script>
+  </body>
 </html>
