@@ -48,7 +48,10 @@
         cameras = devices.filter(source => source.kind == 'videoinput');
         if (cameras.length > 1) {
           changeCam.removeAttribute('disabled');
-          changeCam.addEventListener('click', startStream);
+          changeCam.addEventListener('click', () => {
+            deviceIndex = (deviceIndex + 1) % cameras.length;
+            startStream();
+          });
         }
         startStream();
       }
@@ -56,27 +59,12 @@
       async function startStream() {
         const constraints = {
           video : {
-            optional : [{sourceId : cameras[deviceIndex].deviceId}]
+            deviceId : cameras[deviceIndex].deviceId
           }
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         display.src = window.URL.createObjectURL(stream);
       }
-
-      // navigator.mediaDevices.enumerateDevices()
-      //   .then(sources => {
-      //     cameras = sources.filter(source => source.kind == 'videoinput');
-      //   })
-      //   .then(() => {
-      //     navigator.mediaDevices.getUserMedia({video: { optional : [{sourceId: cameras[0].deviceId }]}})
-      //       .then(stream => {
-      //         display.src = window.URL.createObjectURL(stream);  
-      //       })
-      //       .catch(err => {
-      //         console.error('Failed to get media stream');
-      //       });
-      //   });
-      
     </script>
   </body>
 </html>
