@@ -65,7 +65,9 @@
         };
         if (stream) {
           display.pause();
-          stream.stop();
+          stream.getTracks().forEach(track => {
+            track.stop();
+          });
         }
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         display.src = window.URL.createObjectURL(stream);
