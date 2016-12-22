@@ -64,6 +64,7 @@
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         display.src = window.URL.createObjectURL(stream);
+        display.play();
       }
     </script>
   </body>
