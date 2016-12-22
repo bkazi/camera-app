@@ -40,6 +40,7 @@
       const changeCam = document.getElementById('switch');
       let cameras = [];
       let deviceIndex = 0;
+      let stream;
 
       window.onload = main;
 
@@ -62,7 +63,9 @@
             deviceId : cameras[deviceIndex].deviceId
           }
         };
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        display.pause();
+        stream.stop();
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
         display.src = window.URL.createObjectURL(stream);
         display.play();
       }
