@@ -63,8 +63,10 @@
             deviceId : cameras[deviceIndex].deviceId
           }
         };
-        display.pause();
-        stream.stop();
+        if (stream) {
+          display.pause();
+          stream.stop();
+        }
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         display.src = window.URL.createObjectURL(stream);
         display.play();
